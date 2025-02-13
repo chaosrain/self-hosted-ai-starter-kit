@@ -22,8 +22,15 @@ and run the latest local LLMs
 ✅ [**Qdrant**](https://qdrant.tech/) - Open-source, high performance vector
 store with an comprehensive API
 
-✅ [**PostgreSQL**](https://www.postgresql.org/) -  Workhorse of the Data
+✅ [**PostgreSQL**](https://www.postgresql.org/) - Workhorse of the Data
 Engineering world, handles large amounts of data safely.
+
+✅ [**Flowise**](https://flowiseai.com/) - Open source low-code tool for 
+developers to build customized LLM orchestration flow & AI agents
+
+✅ [**OpenWebUI**](https://openwebui.com/) - Open WebUI is an extensible, 
+self-hosted AI interface that adapts to your workflow, all while operating 
+entirely offline.
 
 ### What you can build
 
