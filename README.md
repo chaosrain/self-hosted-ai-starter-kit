@@ -32,6 +32,9 @@ developers to build customized LLM orchestration flow & AI agents
 self-hosted AI interface that adapts to your workflow, all while operating 
 entirely offline.
 
+✅ [**Nginx**](https://nginxproxymanager.com/) - Expose your services easily 
+and securely
+
 ### What you can build
 
 ⭐️ **AI Agents** for scheduling appointments
