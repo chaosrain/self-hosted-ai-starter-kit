@@ -47,7 +47,7 @@ entirely offline.
 ### Cloning the Repository
 
 ```bash
-git clone https://github.com/n8n-io/self-hosted-ai-starter-kit.git
+git clone https://github.com/chaosrain/self-hosted-ai-starter-kit.git
 cd self-hosted-ai-starter-kit
 ```
 
@@ -56,7 +56,7 @@ cd self-hosted-ai-starter-kit
 #### For Nvidia GPU users
 
 ```
-git clone https://github.com/n8n-io/self-hosted-ai-starter-kit.git
+git clone https://github.com/chaosrain/self-hosted-ai-starter-kit.git
 cd self-hosted-ai-starter-kit
 docker compose --profile gpu-nvidia up
 ```
@@ -68,7 +68,7 @@ docker compose --profile gpu-nvidia up
 ### For AMD GPU users on Linux
 
 ```
-git clone https://github.com/n8n-io/self-hosted-ai-starter-kit.git
+git clone https://github.com/chaosrain/self-hosted-ai-starter-kit.git
 cd self-hosted-ai-starter-kit
 docker compose --profile gpu-amd up
 ```
@@ -88,7 +88,7 @@ If you want to run Ollama on your mac, check the
 for installation instructions, and run the starter kit as follows:
 
 ```
-git clone https://github.com/n8n-io/self-hosted-ai-starter-kit.git
+git clone https://github.com/chaosrain/self-hosted-ai-starter-kit.git
 cd self-hosted-ai-starter-kit
 docker compose up
 ```
