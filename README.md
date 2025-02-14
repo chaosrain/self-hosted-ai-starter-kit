@@ -74,7 +74,7 @@ cd self-hosted-ai-starter-kit
 This docker-compose.yaml file has a few pre-customizations that should be modified to the installer's preference:
 
 ```bash
-sudo nano docker-compose.yaml
+sudo nano docker-compose.yml
 ```
 
 Under the n8n service, look for and modify the line under -volumes:
