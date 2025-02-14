@@ -44,12 +44,54 @@ entirely offline.
 
 ## Installation
 
+### Installing Docker
+
+This is an installation utilizing the Docker Convenience Script: 
+(https://docs.docker.com/engine/install/ubuntu/#install-using-the-convenience-script)
+
+This is a non-root installation so the user needs a permissions upgrade:
+
+```bash
+sudo usermod -aG docker $USER && newgrp docker
+```
+
+### Setting up DNS
+
+```bash
+Type: A
+Name: n8n (or the desired subdomain)
+IP address: <IP_OF_YOUR_SERVER>
+```
+
 ### Cloning the Repository
 
 ```bash
 git clone https://github.com/chaosrain/self-hosted-ai-starter-kit.git
 cd self-hosted-ai-starter-kit
 ```
+
+### Prep Steps to Customize
+This docker-compose.yaml file has a few pre-customizations that should be modified to the installer's preference:
+
+Under the n8n service, look for and modify the line under -volumes:
+
+```bash
+- /home/<YOUR USERNAME>/n8n-local-files:/files
+```
+
+Modify the .env file to match your settings:
+
+```bash
+sudo nano .env
+```
+
+Create Data Folders
+
+```bash
+sudo docker volume create n8n_data
+sudo docker volume create traefik_data
+sudo docker volume create data
+```bash
 
 ### Running n8n using Docker Compose
 
