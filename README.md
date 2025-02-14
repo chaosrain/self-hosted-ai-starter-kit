@@ -73,6 +73,10 @@ cd self-hosted-ai-starter-kit
 ### Prep Steps to Customize
 This docker-compose.yaml file has a few pre-customizations that should be modified to the installer's preference:
 
+```bash
+sudo nano docker-compose.yaml
+```
+
 Under the n8n service, look for and modify the line under -volumes:
 
 ```bash
@@ -91,7 +95,7 @@ Create Data Folders
 sudo docker volume create n8n_data
 sudo docker volume create traefik_data
 sudo docker volume create data
-```bash
+```
 
 ### Running n8n using Docker Compose
 
