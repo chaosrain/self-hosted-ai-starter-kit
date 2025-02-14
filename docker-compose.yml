@@ -5,7 +5,6 @@ volumes:
   qdrant_storage:
   open-webui:
   flowise:
-  data:
   traefik_data:
     external: true
   n8n_data:
@@ -138,7 +137,7 @@ services:
 #      postgres:
 #        condition: service_healthy
         
-  n8n:
+n8n:
     image: docker.n8n.io/n8nio/n8n
     restart: always
     ports:
@@ -167,7 +166,13 @@ services:
       - GENERIC_TIMEZONE=${GENERIC_TIMEZONE}
     volumes:
       - n8n_data:/home/node/.n8n
-      - /home/<YOUR USERNAME>/n8n-local-files:/files
+      - ./n8n/backup:/backup
+      - ./shared:/data/shared
+    depends_on:
+      postgres:
+        condition: service_healthy
+#      n8n-import:
+#        condition: service_completed_successfully
 
   qdrant:
     image: qdrant/qdrant
