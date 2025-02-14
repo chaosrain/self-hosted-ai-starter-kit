@@ -167,7 +167,7 @@ services:
       - GENERIC_TIMEZONE=${GENERIC_TIMEZONE}
     volumes:
       - n8n_data:/home/node/.n8n
-      - /home/<USER>/n8n-local-files:/files
+      - /home/<YOUR USERNAME>/n8n-local-files:/files
 
   qdrant:
     image: qdrant/qdrant
