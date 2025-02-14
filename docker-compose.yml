@@ -6,7 +6,10 @@ volumes:
   open-webui:
   flowise:
   data:
-  letsencrypt:
+  traefik_data:
+    external: true
+  n8n_data:
+    external: true
   
 networks:
   demo:
@@ -49,6 +52,34 @@ x-init-ollama: &init-ollama
     - "sleep 3; ollama pull llama3.2"
 
 services:
+  traefik:
+    image: "traefik"
+    restart: always
+    command:
+      - "--api=true"
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
+      - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.mytlschallenge.acme.tlschallenge=true"
+      - "--certificatesresolvers.mytlschallenge.acme.email=${SSL_EMAIL}"
+      - "--certificatesresolvers.mytlschallenge.acme.storage=/letsencrypt/acme.json"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - traefik_data:/letsencrypt
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+
+  initContainer:
+    image: busybox
+    command: ['sh', '-c', 'chown -R 1000:1000 /home/node/.n8n']
+    volumes:
+      - ${DATA_FOLDER}/.n8n:/home/node/.n8n
+
   flowise:
     image: flowiseai/flowise
     networks: ['demo']
@@ -75,27 +106,6 @@ services:
       - "host.docker.internal:host-gateway"
     volumes:
       - open-webui:/app/backend/data
-
-#  proxy:
-#    image: 'jc21/nginx-proxy-manager:latest'
-#    container_name: nginx-proxy-manager
-#    restart: unless-stopped
-#    network_mode: host
-#    volumes:
-#      - data:/data
-#      - letsencrypt:/etc/letsencrypt
-#    healthcheck:
-#      test: ["CMD", "/usr/bin/check-health"]
-#      interval: 10s
-#      timeout: 3s
-
-# For testing the proxy
-#  helloworld:
-#    image: 'karthequian/helloworld:latest'
-#    container_name: helloworld
-#    restart: unless-stopped
-#    ports:
-#      - 8888:80/tcp
      
   postgres:
     image: postgres:16-alpine
@@ -127,23 +137,37 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-
+        
   n8n:
-    <<: *service-n8n
-    hostname: n8n
-    container_name: n8n
-    restart: unless-stopped
+    image: docker.n8n.io/n8nio/n8n
+    restart: always
     ports:
-      - 5678:5678
+      - "127.0.0.1:5678:5678"
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.n8n.rule=Host(`${SUBDOMAIN}.${DOMAIN_NAME}`)
+      - traefik.http.routers.n8n.tls=true
+      - traefik.http.routers.n8n.entrypoints=web,websecure
+      - traefik.http.routers.n8n.tls.certresolver=mytlschallenge
+      - traefik.http.middlewares.n8n.headers.SSLRedirect=true
+      - traefik.http.middlewares.n8n.headers.STSSeconds=315360000
+      - traefik.http.middlewares.n8n.headers.browserXSSFilter=true
+      - traefik.http.middlewares.n8n.headers.contentTypeNosniff=true
+      - traefik.http.middlewares.n8n.headers.forceSTSHeader=true
+      - traefik.http.middlewares.n8n.headers.SSLHost=${DOMAIN_NAME}
+      - traefik.http.middlewares.n8n.headers.STSIncludeSubdomains=true
+      - traefik.http.middlewares.n8n.headers.STSPreload=true
+      - traefik.http.routers.n8n.middlewares=n8n@docker
+    environment:
+      - N8N_HOST=${SUBDOMAIN}.${DOMAIN_NAME}
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=https
+      - NODE_ENV=production
+      - WEBHOOK_URL=https://${SUBDOMAIN}.${DOMAIN_NAME}/
+      - GENERIC_TIMEZONE=${GENERIC_TIMEZONE}
     volumes:
-      - n8n_storage:/home/node/.n8n
-      - ./n8n/backup:/backup
-      - ./shared:/data/shared
-    depends_on:
-      postgres:
-        condition: service_healthy
-      n8n-import:
-        condition: service_completed_successfully
+      - n8n_data:/home/node/.n8n
+      - /home/augiep/n8n-local-files:/files
 
   qdrant:
     image: qdrant/qdrant
