@@ -9,7 +9,7 @@ volumes:
     external: true
   n8n_data:
     external: true
-  
+
 networks:
   demo:
 
@@ -89,7 +89,7 @@ services:
     ports:
         - 3001:3001
     extra_hosts:
-      - "host.docker.internal:host-gateway"        
+      - "host.docker.internal:host-gateway"
     volumes:
         - ~/.flowise:/root/.flowise
     entrypoint: /bin/sh -c "sleep 3; flowise start"
@@ -105,7 +105,7 @@ services:
       - "host.docker.internal:host-gateway"
     volumes:
       - open-webui:/app/backend/data
-     
+
   postgres:
     image: postgres:16-alpine
     hostname: postgres
@@ -136,7 +136,7 @@ services:
 #    depends_on:
 #      postgres:
 #        condition: service_healthy
-        
+
 n8n:
     image: docker.n8n.io/n8nio/n8n
     restart: always
